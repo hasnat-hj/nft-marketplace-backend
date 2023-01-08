@@ -26,7 +26,7 @@ const Userrouter = require("./routes/UserRoutes");
 
 //connect to mongodb ..
 mongoose
-  .connect("mongodb+srv://daniAdmin:987321654@cluster0.qvhe3aa.mongodb.net/test")
+  .connect(process.env.DB_CONNECT)
   .then(() => console.log("Database connected"))
   .catch((err) => console.log(err));
 

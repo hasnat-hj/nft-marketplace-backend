@@ -49,7 +49,7 @@ const getAllActivities = async (req, res) => {
   try {
     //   if(req.query.params?params['events'])
     const activitesList = await Activity.find(req.query).lean();
-
+    console.log(activitesList)
     res.status(200).send({ status: 200, data: activitesList });
   } catch (err) {
     console.log("err", err);
