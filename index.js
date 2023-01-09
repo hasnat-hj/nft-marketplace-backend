@@ -18,6 +18,7 @@ app.use(cors());
 //app.use(bodyParser.json());
 //import routes
 //const TodoItemRoute = require('./routes/todoItems');
+app.use(express.static("uploads"));
 const NftItemRoute = require("./routes/nftRouter");
 const AuctionItemRoute = require("./routes/auctionRouter");
 const ActivitiesRoute = require("./routes/activityRouter");

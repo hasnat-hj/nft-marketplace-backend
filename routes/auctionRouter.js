@@ -21,10 +21,7 @@ router.post("/createAuctionNft", upload.single("nftImage"), (req, res) => {
     minbid: req.body.minbid,
     curbid: req.body.curbid,
     duration: req.body.duration,
-    img: {
-      data: fs.readFileSync("uploads/" + req.file.filename),
-      contentType: "image/png",
-    },
+    img:  req.file.filename,
     isBuy: req.body.isBuy,
     owner: req.body.owner
   });

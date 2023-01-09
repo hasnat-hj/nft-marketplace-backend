@@ -92,6 +92,7 @@ router.post("/getNft", async (req, res, next) => {
             path: "creator"
           }
         ]);
+        console.log(nfts);
       }
     } else if (req.body.owner) {
       console.log("2nd call");

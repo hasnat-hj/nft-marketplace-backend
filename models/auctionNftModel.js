@@ -27,8 +27,8 @@ const auctionNftSchema = new mongoose.Schema(
             trim: true,
         },
         img: {
-            data: Buffer,
-            contentType: String,
+            type: String,
+            required: true,
         },
         isBuy: {
             type: Boolean,
