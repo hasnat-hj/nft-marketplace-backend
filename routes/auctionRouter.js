@@ -47,7 +47,16 @@ router.put('/createAuctionNft/:id', async (req, res)=>{
     res.json(err);
   }
 })
-
+router.get('/getAuctionNft/:id', async (req, res)=>{
+  try{
+    //find the item by its id and update it
+    // NFTs.findByIdAndUpdate()
+    const Item = await AuctionNFTs.findById(req.params.id);
+    res.status(200).json(Item);
+  }catch(err){
+    res.json(err);
+  }
+})
 
 
 router.get("/getAuctionNft", async (req, res, next) => {
