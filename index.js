@@ -24,7 +24,6 @@ const AuctionItemRoute = require("./routes/auctionRouter");
 const ActivitiesRoute = require("./routes/activityRouter");
 const Userrouter = require("./routes/UserRoutes");
 
-
 //connect to mongodb ..
 mongoose
   .connect(process.env.DB_CONNECT)
@@ -35,7 +34,7 @@ mongoose
 app.use("/nft", NftItemRoute);
 app.use("/Anft", AuctionItemRoute);
 app.use("/activity", ActivitiesRoute);
-app.use('/user',Userrouter)
+app.use("/user", Userrouter);
 
 //connect to server
 app.listen(PORT, () => console.log(`Server connected on port ${PORT}`));
