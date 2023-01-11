@@ -35,6 +35,10 @@ app.use("/nft", NftItemRoute);
 app.use("/Anft", AuctionItemRoute);
 app.use("/activity", ActivitiesRoute);
 app.use("/user", Userrouter);
+app.use("/", (req,res)=>{
+res.send("Api Working.................")
+}
+);
 
 //connect to server
 app.listen(PORT, () => console.log(`Server connected on port ${PORT}`));
