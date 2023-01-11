@@ -1,5 +1,9 @@
 const router = require("express").Router();
 // const { verifyToken, authorization } = require("../middleware/verifyToken");
+const multer = require("multer");
+const upload = multer({
+  storage: multer.diskStorage({}),
+});
 
 const {
   createActivity,
@@ -8,7 +12,7 @@ const {
   getAllActivities,
   searchActivity,
 } = require("../controller/activityController");
-router.post("/", createActivity);
+router.post("/",upload.single("image"), createActivity);
 router.put("/:id", updateActivity);
 
 router.delete("/:id", deleteActivity);
