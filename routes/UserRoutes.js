@@ -35,15 +35,9 @@ Userrouter.post("/login", async (req, res) => {
   return res.status(201).json({ user });
 });
 
-const storage = multer.diskStorage({
-  destination: "uploads/",
-  filename: function (req, file, cb) {
-    console.log(file);
-    cb(null, file.originalname);
-  }
-});
 
-const upload = multer({ storage: storage });
+
+const upload = multer({ storage: multer.diskStorage({}) });
 
 Userrouter.put(
   "/update",
