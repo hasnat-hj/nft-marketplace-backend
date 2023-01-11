@@ -4,6 +4,7 @@ const USERS = require("../models/userModel");
 
 const multer = require("multer");
 const fs = require("fs");
+const cloudinary = require("cloudinary").v2;
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -16,11 +17,20 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+cloudinary.config({
+  cloud_name: "mansoorcloud",
+  api_key: "475838235114589",
+  api_secret: "VqT5klF59dCMOLr58Xsnk2syymk",
+});
+
+
 router.post("/createNft", upload.single("nftImage"), async (req, res) => {
   console.log(req.body);
   const user = await USERS.findOne({
     address: req.body.owner
   });
+
+  const result = await cloudinary.uploader.upload(req.file.path);
   console.log("user", user);
   if (user) {
     const saveImage = NFTs({
@@ -28,10 +38,7 @@ router.post("/createNft", upload.single("nftImage"), async (req, res) => {
       name: req.body.name,
       description: req.body.description,
       price: req.body.price,
-      img: {
-        data: fs.readFileSync("uploads/" + req.file.filename),
-        contentType: "image/png"
-      },
+      img:result.secure_url,
       isBuy: false,
       owner: user._id,
       creator: user._id,

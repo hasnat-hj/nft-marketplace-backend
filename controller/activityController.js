@@ -1,6 +1,21 @@
 const Activity = require("../models/activityModel");
 const ObjectId = require("mongoose").Types.ObjectId;
+const cloudinary = require("cloudinary").v2;
+cloudinary.config({
+  cloud_name: "mansoorcloud",
+  api_key: "475838235114589",
+  api_secret: "VqT5klF59dCMOLr58Xsnk2syymk",
+});
+
+
+
+
 const createActivity = async (req, res) => {
+  console.log("data.......................................................");
+  console.log(req.body);
+  console.log(req.file);
+  const result = await cloudinary.uploader.upload(req.file.path);
+  req.body.image=result.secure_url
   const activity = new Activity(req.body);
   try {
     const saveActivity = await activity.save();
