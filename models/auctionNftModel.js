@@ -41,5 +41,31 @@ const auctionNftSchema = new mongoose.Schema(
     },
     { timestamps: true }
 );
-module.exports = mongoose.model("AuctionNFTs", auctionNftSchema);
+
+module.exports.AuctionNFTs = mongoose.model("AuctionNFTs", auctionNftSchema);
+
+const auctionNftOffers = new mongoose.Schema(
+    {
+        id: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "AuctionNFTs"
+         
+        },
+        address: {
+            type: String,
+                
+        },
+        bid: {
+            type: Number,
+            required: true,
+            trim: true,
+        },
+        
+    },
+    { timestamps: true }
+);
+
+
+module.exports.AuctionOffers = mongoose.model("AuctionNFTOffers", auctionNftOffers);
+
 

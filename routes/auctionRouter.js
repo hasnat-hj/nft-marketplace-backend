@@ -1,5 +1,6 @@
 const router = require("express").Router();
-const AuctionNFTs = require("../models/auctionNftModel");
+const {AuctionNFTs,AuctionOffers} = require("../models/auctionNftModel");
+const USERS = require("../models/userModel");
 const path = require("path");
 const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
@@ -66,12 +67,68 @@ router.get("/getAuctionNft/:id", async (req, res) => {
   }
 });
 
-router.get("/getAuctionNft", async (req, res, next) => {
+router.get("/getAuctionNft", async (req, res) => {
   try {
     const nfts = await AuctionNFTs.find({ isBuy: false });
     // console.log("nfts: " + nfts);
     if (!nfts) res.status(400).json({ msg: "No data found" });
     res.status(200).json(nfts);
+  } catch (err) {
+    return res.status(500).json({ msg: err.message });
+  }
+});
+
+router.put("/auctionBid/:id", async (req, res) => {
+  const id=req.params.id
+const {address,bid}=req.body
+console.log("called");
+console.log(id,bid);
+  try {
+    //find the item by its id and update it
+    // NFTs.findByIdAndUpdate()
+
+  // const user = await USERS.findOne({
+  //   address: address
+  // });
+  const bidData = AuctionOffers({ id,address:address, bid });
+  await bidData.save()
+
+  const highestBid = await AuctionOffers.findOne({id}).sort({bid:-1})
+
+console.log("saved");
+	
+  console.log("higest",highestBid);
+
+
+   if(highestBid){ const updateItem = await AuctionNFTs.findByIdAndUpdate(req.params.id, {
+      curbid: highestBid.bid
+    });}
+    res.status(200).send(highestBid);
+  } catch (err) {
+    res.json(err);
+  }
+});
+router.get("/getAuctionOffers/:id", async (req, res) => {
+  const id=req.params.id
+  console.log(id);
+  try {
+    const data = await AuctionOffers.aggregate([
+
+      {$lookup:{ from: 'users', localField:'address', 
+        foreignField:'address',
+        
+        "pipeline":[
+          {'$project': { username:1,_id:false }}
+        ],
+        as:'user'}},
+        {
+          $unwind: '$user',
+        }
+]);
+    console.log("data",data);
+    // console.log("nfts: " + nfts);
+    if (!data) res.status(400).json({ msg: "No data found" });
+    res.status(200).json(data);
   } catch (err) {
     return res.status(500).json({ msg: err.message });
   }
