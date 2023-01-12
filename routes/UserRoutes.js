@@ -47,7 +47,7 @@ Userrouter.put(
   ]),
   async (req, res, next) => {
     try {
-      console.log("request data ", req.body, req.files);
+      // console.log("request data ", req.body, req.files);
       let updateData = {
         username: req.body.username,
         bio: req.body.bio,
@@ -67,7 +67,7 @@ Userrouter.put(
             updateData = {
               ...updateData,
               profileImage: {
-                data: fs.readFileSync("uploads/" + file.filename),
+                data: fs.readFileSync(file.path),
                 contentType: "image/png"
               }
             };
@@ -78,7 +78,7 @@ Userrouter.put(
             updateData = {
               ...updateData,
               coverImage: {
-                data: fs.readFileSync("uploads/" + file.filename),
+                data: fs.readFileSync(file.path),
                 contentType: "image/png"
               }
             };
