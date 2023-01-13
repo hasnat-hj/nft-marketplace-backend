@@ -33,6 +33,10 @@ const auctionNftSchema = new mongoose.Schema(
         isBuy: {
             type: Boolean,
         },
+        creator: {
+            type: String,
+            required: true,
+          },
         owner: {
             type: String,
             required: true,

@@ -3,10 +3,19 @@ const express = require("express");
 // import userModel from "../models/userModel";
 // import USERS from "../models/userModel";
 const USERS = require("../models/userModel");
-const multer = require("multer");
 const Userrouter = express.Router();
-const fs = require("fs");
+const multer = require("multer");
+const cloudinary = require("cloudinary").v2;
 
+const upload = multer({
+  storage: multer.diskStorage({}),
+});
+
+cloudinary.config({
+  cloud_name: "mansoorcloud",
+  api_key: "475838235114589",
+  api_secret: "VqT5klF59dCMOLr58Xsnk2syymk",
+});
 // login post
 Userrouter.post("/login", async (req, res) => {
   const { username, address, balance } = req.body;
@@ -37,8 +46,6 @@ Userrouter.post("/login", async (req, res) => {
 
 
 
-const upload = multer({ storage: multer.diskStorage({}) });
-
 Userrouter.put(
   "/update",
   upload.any([
@@ -48,6 +55,8 @@ Userrouter.put(
   async (req, res, next) => {
     try {
       // console.log("request data ", req.body, req.files);
+
+      
       let updateData = {
         username: req.body.username,
         bio: req.body.bio,
@@ -58,45 +67,41 @@ Userrouter.put(
           site: req.body.site
         }
       };
-      if (req.files.length > 0) {
-        console.log("files: ", req.files);
-        req.files.forEach(function (file) {
+       
+        for(let file of req.files){
           console.log("file: ", file);
           if (file.fieldname === "profileImage") {
+            const result = await cloudinary.uploader.upload(file.path);
+            console.log(result.secure_url);
             console.log("call profile");
             updateData = {
               ...updateData,
-              profileImage: {
-                data: fs.readFileSync(file.path),
-                contentType: "image/png"
-              }
+              profileImage: result.secure_url,
             };
           }
           if (file.fieldname === "coverImage") {
             console.log("call cover");
-
+            const result = await cloudinary.uploader.upload(file.path);
+            console.log(result.secure_url);
             updateData = {
               ...updateData,
-              coverImage: {
-                data: fs.readFileSync(file.path),
-                contentType: "image/png"
-              }
+              coverImage: result.secure_url,
             };
           }
-        });
-      }
+        }
+      
 
-      console.log(updateData);
+      // console.log(updateData);
       let user = await USERS.findOne({
         address: req.body.address
       });
-      console.log("user", user);
+      // console.log("user", user);
       if (user) {
         const result = await user.update(updateData);
-        console.log(result);
+        // console.log(result);
         res.status(200).send("User update successfully");
       } else {
-        console.log("else call", user);
+        // console.log("else call", user);
         res.status(404).send("User not found. Please login again");
       }
     } catch (error) {

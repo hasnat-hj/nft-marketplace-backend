@@ -29,6 +29,7 @@ router.post(
       duration: req.body.duration,
       img: result.secure_url,
       isBuy: req.body.isBuy,
+      creator:req.body.owner,
       owner: req.body.owner,
     });
     saveImage
@@ -60,7 +61,32 @@ router.get("/getAuctionNft/:id", async (req, res) => {
   try {
     //find the item by its id and update it
     // NFTs.findByIdAndUpdate()
-    const Item = await AuctionNFTs.findById(req.params.id);
+    console.log(req.params.id);
+    const Item =await AuctionNFTs.aggregate([
+      {$match: { $expr : { $eq: [ '$_id' , { $toObjectId: req.params.id } ] } }},
+      {$lookup:{ from: 'users', localField:'creator', 
+        foreignField:'address',
+        
+        "pipeline":[
+          {'$project': { username:1,address:1,profileImage:1,_id:false }}
+        ],
+        as:'creator'},},
+        {$lookup:
+        { from: 'users', localField:'owner', 
+        foreignField:'address',
+        
+        "pipeline":[
+          {'$project': { username:1,address:1,profileImage:1,_id:false }}
+        ],
+        as:'owner'}
+      },
+        {
+          $unwind: '$creator',
+        },
+        {
+          $unwind: '$owner',
+        }
+]).then(items => items[0])
     res.status(200).json(Item);
   } catch (err) {
     res.json(err);
@@ -92,7 +118,7 @@ console.log(id,bid);
   // });
   const bidData = AuctionOffers({ id,address:address, bid });
   await bidData.save()
-
+console.log(bidData);
   const highestBid = await AuctionOffers.findOne({id}).sort({bid:-1})
 
 console.log("saved");
@@ -112,8 +138,9 @@ router.get("/getAuctionOffers/:id", async (req, res) => {
   const id=req.params.id
   console.log(id);
   try {
+    // const data = await AuctionOffers.find({id:id})
     const data = await AuctionOffers.aggregate([
-
+      {$match: { $expr : { $eq: [ '$id' , { $toObjectId: id } ] } }},
       {$lookup:{ from: 'users', localField:'address', 
         foreignField:'address',
         
@@ -131,6 +158,36 @@ router.get("/getAuctionOffers/:id", async (req, res) => {
     res.status(200).json(data);
   } catch (err) {
     return res.status(500).json({ msg: err.message });
+  }
+});
+
+router.get("/auctionBidHighest/:id", async (req, res) => {
+  const id=req.params.id
+const {address,bid}=req.body
+console.log("called");
+console.log(id,bid);
+  try {
+
+
+    const data = await AuctionOffers.aggregate([
+      {$match: { $expr : { $eq: [ '$id' , { $toObjectId: id } ] } }},
+      {$lookup:{ from: 'users', localField:'address', 
+        foreignField:'address',
+        
+        "pipeline":[
+          {'$project': { username:1,profileImage:1,_id:false }}
+        ],
+        as:'user'}},
+        {
+          $unwind: '$user',
+        }
+]).sort({bid:-1}).limit(1).then(items => items[0])
+  // const highestBid = await AuctionOffers.findOne({id}).sort({bid:-1})
+
+
+    res.status(200).send(data);
+  } catch (err) {
+    res.json(err);
   }
 });
 

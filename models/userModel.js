@@ -15,14 +15,10 @@ const UsersSchema = new mongoose.Schema(
       required: false
     },
     coverImage: {
-      data: Buffer,
-      contentType: String,
-      required: false
+      type: String,
     },
     profileImage: {
-      data: Buffer,
-      contentType: String,
-      required: false
+      type: String,
     },
     links: {
       twitter: {
