@@ -25,7 +25,7 @@ router.post(
       id: req.body.id,
       name: req.body.name,
       minbid: req.body.minbid,
-      curbid: req.body.curbid,
+      curbid: req.body.minbid,
       duration: req.body.duration,
       img: result.secure_url,
       isBuy: req.body.isBuy,
