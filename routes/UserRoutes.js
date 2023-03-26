@@ -126,7 +126,7 @@ Userrouter.get("/profile/:address", async (req, res) => {
   }
 });
 
-// get all
+
 Userrouter.get("/getAll", async (req, res) => {
   let user;
   try {
