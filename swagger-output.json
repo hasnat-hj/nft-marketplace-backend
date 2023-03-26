@@ -5,7 +5,7 @@
     "description": "Description",
     "version": "1.0.0"
   },
-  "host": "localhost:5000",
+  "host": "localhost:5500",
   "basePath": "/",
   "schemes": [
     "http"
@@ -350,6 +350,12 @@
               "type": "object",
               "properties": {
                 "image": {
+                  "example": "any"
+                },
+                "id": {
+                  "example": "any"
+                },
+                "name": {
                   "example": "any"
                 }
               }

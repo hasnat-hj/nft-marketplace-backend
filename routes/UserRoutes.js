@@ -125,17 +125,8 @@ Userrouter.get("/profile/:address", async (req, res) => {
     return res.status(404).json(error.message);
   }
 });
-/**
- * @swagger
- * /user/getAll:
- *   get:
- *     summary: Get a list of users
- *     description: Retrieve a list of users from the database
- *     responses:
- *       200:
- *         description: A list of users
- */
-// get all
+
+
 Userrouter.get("/getAll", async (req, res) => {
   let user;
   try {

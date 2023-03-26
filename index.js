@@ -6,17 +6,12 @@ const bodyParser = require("body-parser");
 const app = express();
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument=require("./swagger-output.json")
-// import router from './routes/loginRouter'
-
 
 //Port
 const PORT = process.env.PORT || 5500;
 app.use(express.json());
-//use cors
 
 app.use(cors());
-//import routes
-//const TodoItemRoute = require('./routes/todoItems');
 app.use(express.static("uploads"));
 const NftItemRoute = require("./routes/nftRouter");
 const AuctionItemRoute = require("./routes/auctionRouter");
@@ -29,32 +24,17 @@ mongoose
   .then(() => console.log("Database connected"))
   .catch((err) => console.log(err));
 
-//app.use('/', TodoItemRoute);
 app.use("/nft", NftItemRoute);
 app.use("/Anft", AuctionItemRoute);
 app.use("/activity", ActivitiesRoute);
 app.use("/user", Userrouter);
 
-// const options = {
-//   definition: {
-//     openapi: '3.0.0',
-//     info: {
-//       title: 'My API',
-//       version: '1.0.0',
-//       description: 'My API description',
-//     },
-//   },
-//   apis: ['./routes/*.js'],
-// };
-
-// const swaggerJsdoc = require('swagger-jsdoc');
-// const swaggerUi = require('swagger-ui-express');
-// const specs = swaggerJsdoc(options);
 
 
-// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
-if(process.env.API_DEBUG)
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+if(process.env.API_DEBUG){
+  app.use('/openapi', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+}
  
 
 
